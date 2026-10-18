@@ -92,16 +92,16 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 
 ### 📦 パッケージ別の導入方法
 
-- **【パッケージ1】Steam ワークショップ版（Steamで一元管理したい方向け）**
+- **【パッケージ1】GitHub Standalone EXE版（最も手軽・おすすめ）**
+  1. 画面右側の［**Releases**］または [最新リリース (Releases/latest)](https://github.com/unelmapjt/zTranzlator/releases/latest) を開きます。
+  2. Assets 一覧から **`zTranzlator_v1.0.0_win64.zip`** をダウンロードして展開します。
+  3. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します（Python不要・完全ポータブル）。
+
+- **【パッケージ2】Steam ワークショップ版（Steamで一元管理したい方向け）**
   1. Steamワークショップで本アイテムをサブスクライブします。
   2. 以下の保存先にある **`run_zTranzlator.cmd`** をダブルクリックして起動します：
      `Steam\steamapps\workshop\content\108600\3820166049\Contents\mods\zTranzlator\`
   3. 初回起動時に必要な準備が自動で行われ、そのままアプリが立ち上がります（2回目以降は即時起動）。
-
-- **【パッケージ2】GitHub Standalone EXE版（単体ポータブルで使いたい方向け・推奨）**
-  1. 画面右側の［**Releases**］または [最新リリース (Releases/latest)](https://github.com/unelmapjt/zTranzlator/releases/latest) を開きます。
-  2. Assets 一覧から **`zTranzlator_v1.0.0_win64.zip`** をダウンロードして展開します。
-  3. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します（Python不要）。
 
 - **【パッケージ3】ソースコード版（開発者・コードの改変・Python環境向け）**
   1. 画面上部の緑色［**Code**］ボタンから `Download ZIP` を選択するか、`git clone` します。
