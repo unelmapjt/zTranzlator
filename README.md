@@ -1,6 +1,6 @@
 # zTranzlator - Project Zomboid (Build 42) Mod Translator Suite
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-unelmapjt%2FzTranslator-blue?logo=github)](https://github.com/unelmapjt/zTranslator)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-unelmapjt%2FzTranzlator-blue?logo=github)](https://github.com/unelmapjt/zTranzlator)
 [![Project Zomboid](https://img.shields.io/badge/Project%20Zomboid-Build%2042%20Ready-green)](https://projectzomboid.com)
 [![License](https://img.shields.io/badge/License-MIT-orange)](#-クレジット--credits)
 
@@ -18,6 +18,18 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 現在はアルファ版なので全然完璧ではありませんが、よかったらぜひ使ってみてください！  
 うまく翻訳できないMODがあったらごめんなさい！  
 *Project Zomboid が、これからもずっとみんなで楽しめるものでありますように！*
+
+---
+
+## 🖥️ 動作環境・必要条件 (System Requirements)
+
+| 項目 | 必要条件 | 備考 |
+| :--- | :--- | :--- |
+| **OS** | Windows 10 / 11 (64-bit) | クリーンインストール状態のPCでもそのまま動作 |
+| **Python** | **不要** | スタンドアロンEXE / 自動セットアップで即起動（ソース直接実行時は Python 3.10+） |
+| **グラフィックボード (GPU)** | **不要**（普通のノートPCでOK） | 公式辞書翻訳およびクラウドAI（Gemini無料枠等）はGPU不要でサクサク動作します |
+| **GPU (ローカルAI使用時)** | VRAM 4GB〜8GB以上（推奨） | Ollama（`gemma4:e4b` 等）をPC上で動かす場合のみ（GPUがなくてもクラウドAIで代替可） |
+| **メモリ** | 4GB以上 | - |
 
 ---
 
