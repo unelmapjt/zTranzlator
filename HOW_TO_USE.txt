@@ -8,8 +8,9 @@ GitHub: https://github.com/unelmapjt/zTranzlator
 【動作環境 / System Requirements】
 ・OS: Windows 10 / 11 (64-bit)
 ・Python: 不要（自動でセットアップ・起動します）
-・グラフィックボード (GPU): 不要（普通のノートPCでも公式辞書翻訳やクラウドAIが軽快に動きます）
-  ※ ローカルLLM (Ollama) を自分のPCで動かす場合のみ VRAM 4GB〜8GB程度のGPU推奨。
+・推奨GPU: NVIDIA GeForce GTX 1660 / RTX 2060 / RTX 3060 以上 (VRAM 6GB〜8GB以上)
+  ※ 本ツールは Ollama によるローカルAI翻訳を基本としています。
+  ※ GPU性能が控えめな場合でも、Google Gemini（無料API）などのクラウドAIモードが利用可能です。
 
 【ツールの起動方法 / How to Run】
 
@@ -26,8 +27,9 @@ GitHub: https://github.com/unelmapjt/zTranzlator
 Requirements:
 - OS: Windows 10 / 11 (64-bit)
 - Python: NOT required (runs standalone out-of-the-box)
-- Dedicated GPU: NOT required for built-in dictionary or Gemini cloud AI.
-  (4GB-8GB VRAM GPU recommended only if using local Ollama).
+- Recommended GPU: GTX 1660 / RTX 2060 / RTX 3060 or better (6GB-8GB+ VRAM).
+  (zTranzlator focuses on Local LLM/Ollama for accurate context translation.
+   Google Gemini free API cloud mode is also supported).
 
 Simply double-click "run_zTranzlator.cmd" to launch!
 ============================================================
