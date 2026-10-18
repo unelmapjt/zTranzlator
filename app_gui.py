@@ -696,7 +696,7 @@ class QuickStartDialog(ctk.CTkToplevel):
         self.ollama = OllamaClient()
 
         self.title(t("quickstart_title"))
-        self.geometry("640x600")
+        self.geometry("640x630")
         self.resizable(False, False)
         self.transient(parent)
         self.grab_set()
@@ -734,9 +734,12 @@ class QuickStartDialog(ctk.CTkToplevel):
         self.best_model = best_model or "gemma4:e4b"
 
         card1 = ctk.CTkFrame(main_box, fg_color="#182232", corner_radius=10, border_width=2, border_color="#2563eb")
-        card1.pack(fill="x", pady=(0, 10), ipadx=12, ipady=10)
+        card1.pack(fill="x", pady=(0, 10))
 
-        card1_top = ctk.CTkFrame(card1, fg_color="transparent")
+        card1_inner = ctk.CTkFrame(card1, fg_color="transparent")
+        card1_inner.pack(fill="both", expand=True, padx=16, pady=14)
+
+        card1_top = ctk.CTkFrame(card1_inner, fg_color="transparent")
         card1_top.pack(fill="x")
         ctk.CTkLabel(card1_top, text="🦙 ローカルAI (Ollama)", font=FONT_LABEL_BOLD, text_color="#f8fafc").pack(side="left")
         ctk.CTkLabel(card1_top, text="⭐ おすすめ・完全無料", font=FONT_BADGE, text_color="#38bdf8", fg_color="#1e3a8a", corner_radius=4, padx=6, pady=2).pack(side="left", padx=8)
@@ -757,28 +760,31 @@ class QuickStartDialog(ctk.CTkToplevel):
             btn1_text = "🌐 Ollama 公式サイトを開く"
             btn1_cmd = lambda: webbrowser.open("https://ollama.com/")
 
-        ctk.CTkLabel(card1, text=status_text, font=FONT_SMALL, text_color=status_color).pack(anchor="w", pady=(4, 2))
-        ctk.CTkLabel(card1, text="MOD独自の台詞・設定項目・長文も、PC内のAIが自然に自動翻訳します。", font=FONT_SMALL, text_color="#94a3b8").pack(anchor="w", pady=(0, 8))
+        ctk.CTkLabel(card1_inner, text=status_text, font=FONT_SMALL, text_color=status_color).pack(anchor="w", pady=(6, 2))
+        ctk.CTkLabel(card1_inner, text="MOD独自の台詞・設定項目・長文も、PC内のAIが自然に自動翻訳します。", font=FONT_SMALL, text_color="#94a3b8").pack(anchor="w", pady=(0, 10))
 
         btn1 = ctk.CTkButton(
-            card1, text=btn1_text, height=36, font=FONT_BUTTON,
+            card1_inner, text=btn1_text, height=36, font=FONT_BUTTON,
             fg_color="#2563eb", hover_color="#1d4ed8", corner_radius=8, command=btn1_cmd
         )
         btn1.pack(fill="x")
 
         # 2. Google Gemini API カード
         card2 = ctk.CTkFrame(main_box, fg_color="#1b1f2b", corner_radius=10, border_width=1, border_color="#282e3d")
-        card2.pack(fill="x", pady=(0, 10), ipadx=12, ipady=10)
+        card2.pack(fill="x", pady=(0, 10))
 
-        card2_top = ctk.CTkFrame(card2, fg_color="transparent")
+        card2_inner = ctk.CTkFrame(card2, fg_color="transparent")
+        card2_inner.pack(fill="both", expand=True, padx=16, pady=14)
+
+        card2_top = ctk.CTkFrame(card2_inner, fg_color="transparent")
         card2_top.pack(fill="x")
         ctk.CTkLabel(card2_top, text="⚡ Google Gemini API", font=FONT_LABEL_BOLD, text_color="#f8fafc").pack(side="left")
         ctk.CTkLabel(card2_top, text="超高速クラウド (無料枠あり)", font=FONT_BADGE, text_color="#a855f7", fg_color="#3b1d54", corner_radius=4, padx=6, pady=2).pack(side="left", padx=8)
 
-        ctk.CTkLabel(card2, text="Googleの高性能モデル (Gemini 1.5 Flash) を利用。GPUがないPCでも高速。", font=FONT_SMALL, text_color="#94a3b8").pack(anchor="w", pady=(4, 4))
+        ctk.CTkLabel(card2_inner, text="Googleの高性能モデル (Gemini 1.5 Flash) を利用。GPUがないPCでも高速。", font=FONT_SMALL, text_color="#94a3b8").pack(anchor="w", pady=(6, 4))
         
-        gemini_input_row = ctk.CTkFrame(card2, fg_color="transparent")
-        gemini_input_row.pack(fill="x", pady=(2, 6))
+        gemini_input_row = ctk.CTkFrame(card2_inner, fg_color="transparent")
+        gemini_input_row.pack(fill="x", pady=(2, 0))
         self.gemini_key_entry = ctk.CTkEntry(
             gemini_input_row, placeholder_text="Gemini APIキー (AI Studioで無料取得)", height=32, font=FONT_SMALL,
             fg_color="#22252d", border_color="#334155", corner_radius=6
@@ -796,17 +802,20 @@ class QuickStartDialog(ctk.CTkToplevel):
 
         # 3. 公式スマート辞書のみ カード
         card3 = ctk.CTkFrame(main_box, fg_color="#1b1f2b", corner_radius=10, border_width=1, border_color="#282e3d")
-        card3.pack(fill="x", pady=(0, 8), ipadx=12, ipady=8)
+        card3.pack(fill="x", pady=(0, 8))
 
-        card3_top = ctk.CTkFrame(card3, fg_color="transparent")
+        card3_inner = ctk.CTkFrame(card3, fg_color="transparent")
+        card3_inner.pack(fill="both", expand=True, padx=16, pady=12)
+
+        card3_top = ctk.CTkFrame(card3_inner, fg_color="transparent")
         card3_top.pack(fill="x")
         ctk.CTkLabel(card3_top, text="📖 内蔵スマート辞書のみ", font=FONT_LABEL_BOLD, text_color="#cbd5e1").pack(side="left")
         ctk.CTkLabel(card3_top, text="AI不使用", font=FONT_BADGE, text_color="#94a3b8", fg_color="#334155", corner_radius=4, padx=6, pady=2).pack(side="left", padx=8)
 
-        ctk.CTkLabel(card3, text="ゲーム公式のアイテム名・UIのみ一致（※MOD独自の会話や長文は未翻訳のまま維持されます）。", font=FONT_SMALL, text_color="#64748b").pack(anchor="w", pady=(2, 6))
+        ctk.CTkLabel(card3_inner, text="ゲーム公式のアイテム名・UIのみ一致（※MOD独自の会話や長文は未翻訳のまま維持されます）。", font=FONT_SMALL, text_color="#64748b").pack(anchor="w", pady=(4, 8))
 
         btn3 = ctk.CTkButton(
-            card3, text="辞書のみで始める", height=30, font=FONT_NORMAL,
+            card3_inner, text="辞書のみで始める", height=30, font=FONT_NORMAL,
             fg_color="#334155", hover_color="#475569", corner_radius=6, command=self.select_dict
         )
         btn3.pack(fill="x")
