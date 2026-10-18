@@ -1,5 +1,9 @@
 # zTranzlator - Project Zomboid (Build 42) Mod Translator Suite
 
+<p align="center">
+  <img src="preview.png" width="280" alt="zTranzlator Logo & Poster">
+</p>
+
 [![GitHub Repository](https://img.shields.io/badge/GitHub-unelmapjt%2FzTranzlator-blue?logo=github)](https://github.com/unelmapjt/zTranzlator)
 [![Project Zomboid](https://img.shields.io/badge/Project%20Zomboid-Build%2042%20Ready-green)](https://projectzomboid.com)
 [![License](https://img.shields.io/badge/License-MIT-orange)](#-クレジット--credits)
@@ -14,11 +18,16 @@ Skyrim の傑作翻訳ツール「xTranslator」に着想を得た、**Project Z
 > | パッケージ | おすすめ対象 | 必要な準備 |
 > | :--- | :--- | :--- |
 > | 👉 **[【最新版 スタンドアロンEXE (ZIP)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** | **一番手軽・おすすめ！**（単体ですぐ使いたい方） | **なし**（Python不要・解凍して即起動） |
-> | 👉 **[【Steam ワークショップ】](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)** | Steamで一元管理したい方 | **なし**（サブスクライブ後 `run_zTranzlator.cmd` を押すだけ） |
+> | 👉 **[【Steam ワークショップ】](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)** | Steamで一元管理したい方 | **Python 3.10+** または スタンドアロンEXE配置 |
 >
 > ⚠️ **【重要】緑色の［Code ⬇️］ボタンからダウンロードされる方へ**:  
 > 画面上部の緑色［Code］ボタン ➡「Download ZIP」でダウンロードされるファイルは **「開発用の生ソースコード」** です（中に `zTranzlator.exe` は入っていません）。  
 > 面倒な環境設定なしですぐにアプリとして使いたい方は、必ず上記の **[【最新版 スタンドアロンEXE (Releases)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** から ZIP をダウンロードしてください。
+
+> [!NOTE]
+> **🛡️ セキュリティソフト（Windows Defender等）の警告について**  
+> 本ツール（EXE版）は個人開発の未署名バイナリであるため、Windows Defender等のアンチウイルスにより「トロイの木馬（Trojan:Win32/Wacatac等）」や「不明な発行元」として誤検出（False Positive）される場合があります。  
+> 本リポジトリで全ソースコードを完全公開している通り、悪意のあるプログラムは一切含まれていません。警告が表示された場合は「詳細情報」→「実行」を選択していただくか、信頼できるファイルとして除外設定を行ってご利用ください。
 
 ---
 
@@ -41,7 +50,7 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 | 項目 | 推奨スペック | 備考 |
 | :--- | :--- | :--- |
 | **OS** | Windows 10 / 11 (64-bit) | クリーンインストール状態のPCでも動作 |
-| **Python** | **不要** | スタンドアロンEXE / 自動セットアップで即起動（ソース直接実行時は Python 3.10+） |
+| **実行環境** | **スタンドアロンEXE（Python不要）** または **Python 3.10+** | スタンドアロンEXEならPython不要で即起動 |
 | **グラフィックボード (GPU)** | **VRAM 6GB〜8GB以上 推奨**<br>(GeForce GTX 1660 / RTX 2060 / RTX 3060 等) | Ollama（推奨モデル: `gemma4:e4b` 等）の高速動作に必要。<br>※GPU性能が控えめな場合は Google Gemini（無料API）等のクラウドAIも選択可能 |
 | **メモリ (RAM)** | 8GB以上 (16GB推奨) | - |
 
@@ -175,6 +184,22 @@ zTranzlator/
 ├── SPECIFICATION.md        # 詳細技術仕様書
 └── README.md               # 概要取扱説明書 (本ファイル)
 ```
+
+---
+
+## ⚠️ 免責事項 / Disclaimer
+
+### 日本語
+- **非公式ファンメイドツール**: 本ツールは個人が開発した非公式のファンメイドツールであり、Project Zomboid の開発元である The Indie Stone 社とは一切関係ありません。
+- **無保証・自己責任**: 本ツールの利用、または本ツールによって生成された翻訳パッチMODの導入によって生じたいかなる不具合・損害（セーブデータの破損、ゲームの動作不良、他MODとの競合等）について、製作者は一切の責任を負いかねます。MODの導入やゲームプレイはすべて自己責任で行ってください。
+- **AI翻訳の正確性**: 本ツールは AI（ローカルLLM / クラウドLLM）および辞書による自動機械翻訳を利用しているため、文脈上の誤訳や不自然な表現、ハルシネーションが含まれる場合があります。
+- **二次配布と権利**: 生成された翻訳パッチをワークショップ等で公開する際は、必ず元MOD作者様の利用規約・著作権を遵守してください。公開に伴い生じた元作者様とのトラブル等について、本ツール製作者は一切関与いたしません。
+
+### English
+- **Unofficial Fan Project**: zTranzlator is an unofficial, open-source fan project and is not affiliated with, endorsed by, or associated with The Indie Stone.
+- **As-Is & Use at Your Own Risk**: The software is provided "as is", without warranty of any kind. The author assumes no liability or responsibility for any damages, save data corruption, mod conflicts, or crashes resulting from the use of this tool or generated patches. Use entirely at your own risk.
+- **Machine Translation Accuracy**: Translations produced by AI models or dictionary matching may occasionally contain inaccuracies, context errors, or awkward phrasing.
+- **Publishing Guidelines**: When publishing translated companion patches, please ensure full compliance with the original mod author's permissions, guidelines, and licenses.
 
 ---
 
