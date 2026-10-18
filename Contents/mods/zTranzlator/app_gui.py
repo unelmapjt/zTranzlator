@@ -488,6 +488,13 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         action_bar = ctk.CTkFrame(main_box, fg_color="transparent")
         action_bar.pack(fill="x", side="bottom", pady=(12, 0))
 
+        disclaimer_btn = ctk.CTkButton(
+            action_bar, text=t("btn_disclaimer"), width=110, height=36, font=FONT_NORMAL,
+            fg_color="#1e293b", hover_color="#334155", corner_radius=8,
+            command=lambda: DisclaimerDialog(self.parent, is_first_launch=False)
+        )
+        disclaimer_btn.pack(side="left")
+
         save_btn = ctk.CTkButton(
             action_bar, text="設定を保存", width=120, height=36, font=FONT_BUTTON,
             fg_color="#10b981", hover_color="#059669", corner_radius=8, command=self.on_save
@@ -685,6 +692,78 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         if not silent:
             messagebox.showinfo(t("status_ready"), t("msg_settings_saved"))
         self.destroy()
+
+
+class DisclaimerDialog(ctk.CTkToplevel):
+    """免責事項・利用規約確認ダイアログ (初回起動時 / いつでも確認可能)"""
+    def __init__(self, parent, is_first_launch: bool = False):
+        super().__init__(parent)
+        self.parent = parent
+        self.is_first_launch = is_first_launch
+        self.config = ConfigManager.load()
+
+        self.title(t("disclaimer_title"))
+        self.geometry("580x530")
+        self.resizable(False, False)
+        self.transient(parent)
+        self.grab_set()
+        self.configure(fg_color="#14171f")
+        self.protocol("WM_DELETE_WINDOW", self.on_agree)
+
+        main_box = ctk.CTkFrame(self, fg_color="transparent")
+        main_box.pack(fill="both", expand=True, padx=24, pady=20)
+
+        # ヘッダー
+        ctk.CTkLabel(main_box, text=t("disclaimer_title"), font=FONT_TITLE, text_color="#f8fafc").pack(anchor="w")
+        ctk.CTkLabel(main_box, text=t("disclaimer_sub"), font=FONT_SMALL, text_color="#94a3b8").pack(anchor="w", pady=(2, 12))
+
+        # 免責事項カード
+        card = ctk.CTkFrame(main_box, fg_color="#18202e", corner_radius=10, border_width=1, border_color="#2b384e")
+        card.pack(fill="both", expand=True, pady=(0, 14))
+
+        card_inner = ctk.CTkFrame(card, fg_color="transparent")
+        card_inner.pack(fill="both", expand=True, padx=16, pady=12)
+
+        items = [
+            ("🛡️ " + t("disclaimer_item1_title"), t("disclaimer_item1_desc")),
+            ("📜 " + t("disclaimer_item2_title"), t("disclaimer_item2_desc")),
+            ("🤖 " + t("disclaimer_item3_title"), t("disclaimer_item3_desc")),
+            ("⚠️ " + t("disclaimer_item4_title"), t("disclaimer_item4_desc")),
+        ]
+        for title, desc in items:
+            ctk.CTkLabel(card_inner, text=title, font=FONT_LABEL_BOLD, text_color="#38bdf8").pack(anchor="w", pady=(3, 1))
+            ctk.CTkLabel(card_inner, text=desc, font=FONT_SMALL, text_color="#cbd5e1", wraplength=500, justify="left").pack(anchor="w", pady=(0, 5))
+
+        # フッター (チェックボックス & 同意ボタン)
+        footer = ctk.CTkFrame(main_box, fg_color="transparent")
+        footer.pack(fill="x")
+
+        self.dont_show_var = tk.BooleanVar(value=True)
+        self.chk_dont_show = ctk.CTkCheckBox(
+            footer, text=t("disclaimer_dont_show"),
+            variable=self.dont_show_var, font=FONT_SMALL,
+            fg_color="#3b82f6", hover_color="#2563eb",
+            text_color="#94a3b8"
+        )
+        self.chk_dont_show.pack(side="left")
+
+        btn_agree = ctk.CTkButton(
+            footer, text=t("disclaimer_btn_agree"), width=150, height=34,
+            font=FONT_BUTTON, fg_color="#2563eb", hover_color="#1d4ed8",
+            corner_radius=8, command=self.on_agree
+        )
+        btn_agree.pack(side="right")
+
+    def on_agree(self):
+        if self.dont_show_var.get():
+            self.config["show_disclaimer"] = False
+        else:
+            self.config["show_disclaimer"] = True
+        ConfigManager.save(self.config)
+        self.destroy()
+
+        if self.is_first_launch and not self.config.get("setup_completed", False):
+            self.parent.after(200, self.parent.open_quickstart_dialog)
 
 
 class QuickStartDialog(ctk.CTkToplevel):
@@ -911,7 +990,9 @@ class ModernZTranzlatorApp(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW", self.on_main_window_close)
         self.start_telemetry_monitor()
 
-        if not self.config.get("setup_completed", False):
+        if self.config.get("show_disclaimer", True):
+            self.after(300, lambda: self.open_disclaimer_dialog(is_first_launch=True))
+        elif not self.config.get("setup_completed", False):
             self.after(300, self.open_quickstart_dialog)
 
     def get_patch_suffix(self) -> str:
@@ -1888,6 +1969,10 @@ class ModernZTranzlatorApp(ctk.CTk):
                 self.update_mod_list_progress(self.current_mod["id"], pct)
                 self.save_current_draft()
             self.status_var.set(f"編集保存: \"{orig_en}\" ➡ \"{new_jp}\"")
+
+    def open_disclaimer_dialog(self, is_first_launch: bool = False):
+        dialog = DisclaimerDialog(self, is_first_launch=is_first_launch)
+        self.wait_window(dialog)
 
     def open_quickstart_dialog(self):
         dialog = QuickStartDialog(self)
