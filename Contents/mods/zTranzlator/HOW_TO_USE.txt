@@ -2,34 +2,39 @@
 zTranzlator - Project Zomboid Build 42 Translation Suite
 Author: Uni-SJ
 Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049
-GitHub: https://github.com/unelmapjt/zTranzlator
 ============================================================
 
-【動作環境 / System Requirements】
-・OS: Windows 10 / 11 (64-bit)
-・Python: 不要（自動でセットアップ・起動します）
-・推奨GPU: NVIDIA GeForce GTX 1660 / RTX 2060 / RTX 3060 以上 (VRAM 6GB〜8GB以上)
-  ※ 本ツールは Ollama によるローカルAI翻訳を基本としています。
-  ※ GPU性能が控えめな場合でも、Google Gemini（無料API）などのクラウドAIモードが利用可能です。
+【このパッケージについて】
+本アイテムは Steam Workshop サブスクライブ用の配布パッケージです。
 
-【ツールの起動方法 / How to Run】
-
+【起動方法】
 1. このフォルダ内にある「run_zTranzlator.cmd」をダブルクリックしてください。
-   自動的にスタンドアロンエンジンがセットアップされ、GUIアプリが起動します。
-   （※ 初回のみ数秒ダウンロードが行われます。2回目以降は0秒で即起動します）
+   初回起動時に必要な準備が自動で行われ、そのままGUIアプリが立ち上がります。
+   （※ Pythonのインストールや環境変数の設定は一切不要です）
+   （※ 2回目以降は準備なしで0秒即起動します）
 
 2. 画面の指示に従って翻訳したいMODを選択し、
    「一括AI翻訳を実行」->「ローカルMOD適用」をクリックするだけで、
    完全非破壊の日本語化パッチMODが自動生成されます。
 
+【動作環境】
+・OS: Windows 10 / 11 (64-bit)
+・推奨GPU: NVIDIA GeForce GTX 1660 / RTX 2060 / RTX 3060 以上 (VRAM 6GB〜8GB以上)
+  ※ 本ツールは Ollama によるAI文脈翻訳を主軸としています。
+  ※ GPU性能が控えめな場合でも、Google Gemini（無料API）などのクラウドAIモードが利用可能です。
+
 ------------------------------------------------------------
 [English]
-Requirements:
-- OS: Windows 10 / 11 (64-bit)
-- Python: NOT required (runs standalone out-of-the-box)
-- Recommended GPU: GTX 1660 / RTX 2060 / RTX 3060 or better (6GB-8GB+ VRAM).
-  (zTranzlator focuses on Local LLM/Ollama for accurate context translation.
-   Google Gemini free API cloud mode is also supported).
+How to Launch:
+1. Simply double-click "run_zTranzlator.cmd" inside this folder!
+   All required files are automatically prepared on first launch.
+   (No Python or manual environment setup required).
 
-Simply double-click "run_zTranzlator.cmd" to launch!
+2. Select your target mod in the suite, run AI translation,
+   and apply the generated standalone patch mod to your local game.
+
+Requirements:
+- Windows 10 / 11 (64-bit)
+- Recommended GPU: GTX 1660 / RTX 2060 / RTX 3060+ (6GB-8GB+ VRAM for Ollama)
+  (Google Gemini free API cloud mode is also available).
 ============================================================
