@@ -1,0 +1,24 @@
+============================================================
+zTranzlator - Project Zomboid Build 42 Translation Suite
+Author: Uni-SJ
+Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049
+GitHub: https://github.com/unelmapjt/zTranzlator
+============================================================
+
+【ツールの起動方法 / How to Run】
+
+1. このフォルダ内にある「run_zTranzlator.cmd」をダブルクリックしてください。
+   Python のインストールは不要です。
+   自動的にスタンドアロンエンジンがセットアップされ、GUIアプリが起動します。
+   （※ 初回のみ数秒ダウンロードが行われます。2回目以降は即起動します）
+
+2. 画面の指示に従って翻訳したいMODを選択し、
+   「一括AI翻訳を実行」->「ローカルMOD適用」をクリックするだけで、
+   完全非破壊の日本語化パッチMODが自動生成されます。
+
+------------------------------------------------------------
+[English]
+Simply double-click "run_zTranzlator.cmd" to launch!
+Python is NOT required — it automatically prepares the standalone engine
+and starts the suite. (Subsequent launches start instantly).
+============================================================

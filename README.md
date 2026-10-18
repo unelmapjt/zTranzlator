@@ -62,10 +62,22 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 ## 🚀 クイックスタート
 
 ### 1. 起動方法
-フォルダ内の **`run_zTranzlator.bat`** をダブルクリックして起動します。
 
-> ※ 初回実行時に必要なライブラリ（`customtkinter`, `pillow`）が自動チェック・セットアップされます。  
-> ※ Python環境すら不要な配布用EXEを作りたい場合は、`build_exe.bat` を実行してください。
+お好みの導入方法に合わせて以下のいずれかで起動できます（**Pythonのインストールは不要です**）：
+
+- **方法A: GitHub Releases から導入（最も手軽・おすすめ）**
+  1. [GitHub Releases](https://github.com/unelmapjt/zTranzlator/releases/latest) から `zTranzlator_v1.0.0_win64.zip` をダウンロードして展開します。
+  2. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します。
+
+- **方法B: Steam ワークショップから導入**
+  1. ワークショップアイテムをサブスクライブします。
+  2. `Steam\steamapps\workshop\content\108600\3820166049\Contents\mods\zTranzlator\` 内にある **`run_zTranzlator.cmd`** をダブルクリックします。
+  3. Python 未導入環境でも、初回起動時に自動でスタンドアロンエンジンがセットアップされ即起動します（2回目以降は即時起動）。
+
+- **方法C: ソースコードから実行**
+  - リポジトリをクローンし、**`run_zTranzlator.cmd`** をダブルクリックします（Pythonと必要ライブラリが自動チェックされます）。
+
+> ※ 配布用スタンドアロンEXEを自分で再ビルドしたい場合は、`build_exe.cmd` を実行してください。
 
 ### 2. 翻訳の3ステップ
 1. **MODを選択**:
@@ -126,8 +138,8 @@ zTranzlator/
 ├── Contents/               # Steamサブスクライブ用MOD配信ディレクトリ
 │   └── mods/zTranzlator/   # サブスクライバーへ配信されるツール一式
 ├── app_gui.py              # メインGUIアプリケーション (CustomTkinter / Meiryo UI)
-├── run_zTranzlator.bat     # アプリ起動用バッチ (自動依存関係チェック付き)
-├── build_exe.bat           # 配布用EXEビルドスクリプト (PyInstaller)
+├── run_zTranzlator.cmd     # アプリ起動用ランチャー (スタンドアロン自動検出・全自動セットアップ)
+├── build_exe.cmd           # 配布用EXEビルドスクリプト (PyInstaller)
 ├── dict_builder.py         # バニラ公式辞書(Translate/JP)自動構築モジュール
 ├── mod_scanner.py          # Type A/B/C 静的抽出 ＆ 差分更新スキャナー
 ├── translator_engine.py    # Ollama / Gemini / OpenAI互換 / スマート辞書エンジン
@@ -142,7 +154,8 @@ zTranzlator/
 
 ## 👤 クレジット / Credits
 - **Author**: Uni-SJ
-- **GitHub**: [https://github.com/unelmapjt/zTranslator](https://github.com/unelmapjt/zTranslator)
+- **GitHub**: [https://github.com/unelmapjt/zTranzlator](https://github.com/unelmapjt/zTranzlator)
+- **Steam Workshop**: [zTranzlator (ID: 3820166049)](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)
 - **Steam Workshop**: [Uni-SJ Workshop Files](https://steamcommunity.com/profiles/76561198062851438/myworkshopfiles?appid=108600)
 - *背後に気をつけて。幸運を祈る。*
 

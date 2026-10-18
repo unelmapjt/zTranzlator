@@ -484,10 +484,10 @@
         </div>
 
         <div class="card" id="quick-prereq-ja" style="border-left: 4px solid var(--accent); margin-bottom: 24px;">
-          <h3 style="margin-top:0;">📋 事前準備チェック（初回のみ）</h3>
+          <h3 style="margin-top:0;">📋 事前準備チェック（Pythonインストール不要！）</h3>
           <p style="font-size: 13px; margin-bottom: 6px;">
-            1. <strong>Python 3.10以上:</strong> インストール時に一番下の <code style="color:#fbbf24;">Add python.exe to PATH</code> に必ずチェックを入れておいてください（忘れるとbatが起動しません）。<br>
-            2. <strong>Ollama (推奨):</strong> <a href="https://ollama.com" target="_blank" style="color:#38bdf8;">ollama.com</a> からインストールしておくと、アプリ起動後に1クリックで推奨AIモデル（<code>gemma4:e4b</code>）をダウンロードして完全無料・無制限のAI翻訳ができます。
+            1. <strong>Windowsクリーン環境でOK:</strong> Pythonのインストールは不要です。GitHubのZIPから <code>zTranzlator.exe</code> を直接実行するか、Steamサブスクライブフォルダ内の <code>run_zTranzlator.cmd</code> を実行すると自動でスタンドアロン版が起動します。<br>
+            2. <strong>Ollama (推奨):</strong> <a href="https://ollama.com" target="_blank" style="color:#38bdf8;">ollama.com</a> からインストールしておくと、アプリ起動後に1クリックで推奨AIモデル（<code>gemma4:e4b</code>）をダウンロードして完全無料・無制限のAI翻訳ができます（Google Geminiの無料APIキーでも利用可能）。
           </p>
         </div>
 
@@ -495,8 +495,8 @@
           <div class="step-number">1</div>
           <div class="step-content">
             <div class="step-title">アプリを起動する</div>
-            <p>MODフォルダ内の <code>run_zTranzlator.bat</code> をダブルクリックします。<br>
-            必要なライブラリが自動チェックされ、ダーク調のモダンUIが起動します。</p>
+            <p><strong>GitHub ZIPの場合:</strong> 展開したフォルダ内の <code>zTranzlator.exe</code> をダブルクリックします（0秒即起動）。<br>
+            <strong>Steam Workshopの場合:</strong> フォルダ内の <code>run_zTranzlator.cmd</code> をダブルクリックします（初回のみ自動セットアップが行われ起動します）。</p>
           </div>
         </div>
 
@@ -543,10 +543,10 @@
         </div>
 
         <div class="card" id="quick-prereq-en" style="border-left: 4px solid var(--accent); margin-bottom: 24px;">
-          <h3 style="margin-top:0;">📋 Prerequisites Checklist (First-time only)</h3>
+          <h3 style="margin-top:0;">📋 Prerequisites Checklist (No Python Required!)</h3>
           <p style="font-size: 13px; margin-bottom: 6px;">
-            1. <strong>Python 3.10+:</strong> Ensure <code style="color:#fbbf24;">Add python.exe to PATH</code> was checked during installation (required for the batch launcher).<br>
-            2. <strong>Ollama (Recommended):</strong> Install from <a href="https://ollama.com" target="_blank" style="color:#38bdf8;">ollama.com</a> to enable 100% free, offline, unlimited AI translation using recommended models like <code>gemma4:e4b</code>.
+            1. <strong>Runs on Clean Windows:</strong> Python is NOT required. Run <code>zTranzlator.exe</code> directly from the GitHub release ZIP, or run <code>run_zTranzlator.cmd</code> from your Steam subscription folder.<br>
+            2. <strong>Ollama (Recommended):</strong> Install from <a href="https://ollama.com" target="_blank" style="color:#38bdf8;">ollama.com</a> to enable 100% free, offline, unlimited AI translation using recommended models like <code>gemma4:e4b</code> (or use Google Gemini free API).
           </p>
         </div>
 
@@ -554,8 +554,8 @@
           <div class="step-number">1</div>
           <div class="step-content">
             <div class="step-title">Launch the Application</div>
-            <p>Double-click <code>run_zTranzlator.bat</code> inside the tool folder.<br>
-            Required dependencies will be verified and the modern desktop interface will launch.</p>
+            <p><strong>GitHub ZIP:</strong> Double-click <code>zTranzlator.exe</code> directly (launches instantly without setup).<br>
+            <strong>Steam Workshop:</strong> Double-click <code>run_zTranzlator.cmd</code> (automatically configures the standalone engine and starts).</p>
           </div>
         </div>
 
@@ -595,24 +595,20 @@
         <p>zTranzlator の内部アーキテクチャ、ファイル反映の仕組み、ローカルLLM設定、リソース監視、ワークショップ配布に関する完全ガイドです。</p>
 
         <!-- 1. 環境構築ガイド -->
-        <h2 id="detail-setup">1. 環境構築ガイド (Python ＆ Ollama の導入手順)</h2>
+        <h2 id="detail-setup">1. 起動・導入ガイド (スタンドアロン版 ＆ Python環境)</h2>
         <div class="card">
-          <h3>Step 1: Python 3.10+ のインストール</h3>
-          <p>zTranzlator は Python で動作するオープンソースツールです。PCにまだ Python がインストールされていない場合は、以下の手順で導入してください：</p>
+          <h3>導入方法1: スタンドアロン版（推奨・Pythonインストール不要）</h3>
+          <p>zTranzlator はクリーンなWindows環境でも一切の事前セットアップなしで動くように作られています：</p>
+          <ul style="margin-left: 20px; color: var(--text-sub); font-size: 13.5px; line-height: 1.7;">
+            <li><strong>GitHub Releases からダウンロード:</strong> <a href="https://github.com/unelmapjt/zTranzlator/releases/latest" target="_blank" style="color:var(--accent-color); font-weight:600;">GitHub Releases</a> から最新ZIPを取得し、中にある <code>zTranzlator.exe</code> を実行するだけです。</li>
+            <li><strong>Steam Workshop から導入:</strong> サブスクライブ後、フォルダ内の <code>run_zTranzlator.cmd</code> を実行すると、初回のみ自動的にスタンドアロンエンジンがセットアップされ起動します（2回目以降は即起動）。</li>
+          </ul>
+
+          <h3 style="margin-top: 24px;">導入方法2: ソースコードから実行する場合（開発者・Python環境向け）</h3>
+          <p>Python環境で直接動かしたい場合は、以下の手順で実行できます：</p>
           <ol style="margin-left: 20px; color: var(--text-sub); font-size: 13.5px; line-height: 1.7;">
-            <li><a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent-color); font-weight:600;">Python 公式ダウンロードページ (python.org)</a> から最新の Windows インストーラーをダウンロードします。</li>
-            <li>インストーラーをダブルクリックして起動します。</li>
-            <li>
-              <div class="alert alert-warning" style="margin: 8px 0;">
-                <div>
-                  <strong>⚠️ 超重要（ここを忘れると起動しません）:</strong><br>
-                  インストーラー最下部にある <strong>「Add python.exe to PATH」（PATHを通す）に必ずチェック</strong> を入れてください。<br>
-                  ※チェックを入れずに進めると、batファイル起動時に「'python' はコマンドとして認識されていません」と表示されてしまいます。
-                </div>
-              </div>
-            </li>
-            <li><strong>［Install Now］</strong> をクリックして完了を待ちます。</li>
-            <li><strong>ライブラリの自動セットアップ:</strong> zTranzlator フォルダ内の <code>run_zTranzlator.bat</code> をダブルクリックするだけで、初回起動時に必要なモジュール（GUIライブラリ、通信モジュール等）が全自動で安全にダウンロード＆インストールされます。</li>
+            <li><a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent-color); font-weight:600;">Python 3.10以上</a> をインストール（「Add python.exe to PATH」にチェック）。</li>
+            <li>リポジトリ内の <code>run_zTranzlator.cmd</code> をダブルクリックすると、必要なライブラリ（CustomTkinter, Pillow, requests 等）が自動インストールされて起動します。</li>
           </ol>
 
           <h3 style="margin-top: 24px;">Step 2: Ollama の導入 (ローカルLLM実行基盤)</h3>
@@ -845,24 +841,20 @@
         <p>A comprehensive architectural and user guide covering non-destructive patching, folder structure inheritance, Ollama models, telemetry monitoring, and Workshop publishing.</p>
 
         <!-- 1. Setup Guide -->
-        <h2 id="detail-setup-en">1. Environment Setup Guide (Python & Ollama Installation)</h2>
+        <h2 id="detail-setup-en">1. Launch & Setup Guide (Standalone & Python Environments)</h2>
         <div class="card">
-          <h3>Step 1: Install Python 3.10+</h3>
-          <p>zTranzlator is an open-source Python desktop application. If you don't have Python installed on your PC, follow these steps:</p>
+          <h3>Method 1: Standalone Suite (Recommended — No Python Required)</h3>
+          <p>zTranzlator runs completely out-of-the-box on clean Windows installations without needing Python or compilers:</p>
+          <ul style="margin-left: 20px; color: var(--text-sub); font-size: 13.5px; line-height: 1.7;">
+            <li><strong>GitHub Releases:</strong> Download the latest ZIP from <a href="https://github.com/unelmapjt/zTranzlator/releases/latest" target="_blank" style="color:var(--accent-color); font-weight:600;">GitHub Releases</a> and run <code>zTranzlator.exe</code> directly.</li>
+            <li><strong>Steam Workshop:</strong> Subscribe to the item and double-click <code>run_zTranzlator.cmd</code> inside the workshop folder. It automatically configures the standalone engine on first launch.</li>
+          </ul>
+
+          <h3 style="margin-top: 24px;">Method 2: Running from Source (Developers / Python Users)</h3>
+          <p>If you prefer running directly from Python source code:</p>
           <ol style="margin-left: 20px; color: var(--text-sub); font-size: 13.5px; line-height: 1.7;">
-            <li>Visit the <a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent-color); font-weight:600;">Official Python Downloads Page (python.org)</a> and download the latest Windows installer.</li>
-            <li>Run the downloaded installer.</li>
-            <li>
-              <div class="alert alert-warning" style="margin: 8px 0;">
-                <div>
-                  <strong>⚠️ Crucial Requirement (Do not miss this):</strong><br>
-                  On the first installer screen, make sure to check <strong>"Add python.exe to PATH"</strong> at the bottom before clicking Install Now.<br>
-                  ※ If missed, Windows will report "'python' is not recognized as an internal or external command" when running the .bat launcher.
-                </div>
-              </div>
-            </li>
-            <li>Click <strong>［Install Now］</strong> and wait for completion.</li>
-            <li><strong>Automatic Dependencies Setup:</strong> Simply double-click <code>run_zTranzlator.bat</code> inside the zTranzlator folder. On the first launch, it will automatically and securely download required dependencies (CustomTkinter GUI, requests, psutil, etc.). No manual terminal commands required.</li>
+            <li>Install <a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent-color); font-weight:600;">Python 3.10+</a> (ensure "Add python.exe to PATH" is checked).</li>
+            <li>Double-click <code>run_zTranzlator.cmd</code> inside the repository. Required dependencies (CustomTkinter, Pillow, requests, psutil) will be checked and auto-installed automatically.</li>
           </ol>
 
           <h3 style="margin-top: 24px;">Step 2: Install Ollama (Local LLM Runtime Engine)</h3>
