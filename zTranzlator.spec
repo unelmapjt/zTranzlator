@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('vanilla_dict.json', '.'), ('MANUAL.html', '.'), ('README.md', '.'), ('SPECIFICATION.md', '.'), ('preview.png', '.')]
+datas = [('vanilla_dict.json', '.'), ('vanilla_dict_KO.json', '.'), ('MANUAL.html', '.'), ('README.md', '.'), ('SPECIFICATION.md', '.'), ('preview.png', '.'), ('poster.png', '.')]
 binaries = []
 hiddenimports = []
 tmp_ret = collect_all('customtkinter')

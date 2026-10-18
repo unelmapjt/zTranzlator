@@ -15,10 +15,12 @@ echo [2/3] zTranzlator.exe をビルド中 (Modern Single-folder Portable)...
 python -m PyInstaller --noconfirm --onedir --windowed ^
     --name "zTranzlator" ^
     --add-data "vanilla_dict.json;." ^
+    --add-data "vanilla_dict_KO.json;." ^
     --add-data "MANUAL.html;." ^
     --add-data "README.md;." ^
     --add-data "SPECIFICATION.md;." ^
     --add-data "preview.png;." ^
+    --add-data "poster.png;." ^
     --collect-all customtkinter ^
     app_gui.py
 if %ERRORLEVEL% NEQ 0 (
