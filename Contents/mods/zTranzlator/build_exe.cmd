@@ -30,7 +30,18 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 echo.
-echo [3/3] ビルド完了！
-echo 出力フォルダ: dist\zTranzlator\zTranzlator.exe
+echo [3/4] 配信用ドキュメントを同梱中...
+copy /y "HOW_TO_USE.txt" "dist\zTranzlator\" >nul
+copy /y "MANUAL.html" "dist\zTranzlator\" >nul
+copy /y "README.md" "dist\zTranzlator\" >nul
+
+echo [4/4] 配信用 ZIP アーカイブを作成中...
+powershell -NoProfile -Command "Compress-Archive -Path 'dist\zTranzlator' -DestinationPath 'dist\zTranzlator_v1.0.0_win64.zip' -Force"
+
+echo.
+echo ============================================================
+echo   ビルド ＆ ZIP パッケージ作成が完了しました！
+echo   EXE: dist\zTranzlator\zTranzlator.exe
+echo   ZIP: dist\zTranzlator_v1.0.0_win64.zip
 echo ============================================================
 pause
