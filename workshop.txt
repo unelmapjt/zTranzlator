@@ -105,4 +105,4 @@ description=Workshop Profile: https://steamcommunity.com/profiles/76561198062851
 description=Standalone Download (Direct ZIP): https://github.com/unelmapjt/zTranzlator/releases/latest
 description=[i]Watch your back. Good luck.[/i]
 tags=Build 42;Framework;Interface
-visibility=private
+visibility=public
