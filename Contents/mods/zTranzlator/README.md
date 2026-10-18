@@ -9,13 +9,12 @@ Skyrim の傑作翻訳ツール「xTranslator」に着想を得た、**Project Z
 
 ---
 
-> ### 📥 ダウンロード案内（どれを使えばいい？）
+> ### 📥 いますぐ使う（ダウンロード案内）
 >
-> | 用途・対象 | おすすめのダウンロード先 | 必要な準備 |
+> | パッケージ | おすすめ対象 | 必要な準備 |
 > | :--- | :--- | :--- |
-> | **🎮 すぐに使いたい方（一般・推奨）** | 👉 **[【最新版 スタンドアロンEXE (ZIP)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** をダウンロード | **なし**（Python不要・解凍して即起動） |
-> | **🕹️ Steamで一元管理したい方** | 👉 **[【Steam ワークショップ】](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)** でサブスクライブ | **なし**（`run_zTranzlator.cmd` を押すだけ） |
-> | **💻 開発者・コードを見たい方** | 画面上部の緑色［**Code**］ボタンから `git clone` または `Download ZIP` | Python 3.10+ が必要 |
+> | 👉 **[【最新版 スタンドアロンEXE (ZIP)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** | **一番手軽・おすすめ！**（単体ですぐ使いたい方） | **なし**（Python不要・解凍して即起動） |
+> | 👉 **[【Steam ワークショップ】](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)** | Steamで一元管理したい方 | **なし**（サブスクライブ後 `run_zTranzlator.cmd` を押すだけ） |
 >
 > ⚠️ **【重要】緑色の［Code ⬇️］ボタンからダウンロードされる方へ**:  
 > 画面上部の緑色［Code］ボタン ➡「Download ZIP」でダウンロードされるファイルは **「開発用の生ソースコード」** です（中に `zTranzlator.exe` は入っていません）。  
@@ -88,27 +87,23 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 
 ## 🚀 クイックスタート（導入・起動方法）
 
-ご利用スタイルに合わせて **3種類のパッケージ** から選択できます（**通常利用ではPythonのインストールは不要です**）：
+ご利用スタイルに合わせて **2つの導入方法** から選択できます（**Pythonのインストールは不要です**）：
 
 ### 📦 パッケージ別の導入方法
 
-- **【パッケージ1】GitHub Standalone EXE版（最も手軽・おすすめ）**
+- **【方法1】スタンドアロンEXE版（一番手軽・おすすめ！）**
   1. 画面右側の［**Releases**］または [最新リリース (Releases/latest)](https://github.com/unelmapjt/zTranzlator/releases/latest) を開きます。
   2. Assets 一覧から **`zTranzlator_v1.0.0_win64.zip`** をダウンロードして展開します。
   3. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します（Python不要・完全ポータブル）。
 
-- **【パッケージ2】Steam ワークショップ版（Steamで一元管理したい方向け）**
+- **【方法2】Steam ワークショップ版（Steamで一元管理したい方向け）**
   1. Steamワークショップで本アイテムをサブスクライブします。
   2. 以下の保存先にある **`run_zTranzlator.cmd`** をダブルクリックして起動します：
      `Steam\steamapps\workshop\content\108600\3820166049\Contents\mods\zTranzlator\`
   3. 初回起動時に必要な準備が自動で行われ、そのままアプリが立ち上がります（2回目以降は即時起動）。
 
-- **【パッケージ3】ソースコード版（開発者・コードの改変・Python環境向け）**
-  1. 画面上部の緑色［**Code**］ボタンから `Download ZIP` を選択するか、`git clone` します。
-  2. フォルダ内の **`run_zTranzlator.cmd`** をダブルクリックするか、ターミナルで `python app_gui.py` を実行します（Python 3.10+ が必要）。
-  3. 初回起動時に必要な Python ライブラリ（CustomTkinter, Pillow 等）が自動インストールされます。
-
-> 💡 **配布用EXEの自作**: 自分でスタンドアロンEXEを再ビルドしたい場合は、`build_exe.cmd` を実行してください。
+> 💻 **開発者向け（ソースコードからの実行）**:  
+> Python 3.10+ 環境で直接実行・改造したい場合は、リポジトリを `git clone` して `run_zTranzlator.cmd` または `python app_gui.py` を実行してください。配布用EXEを再ビルドする場合は `build_exe.cmd` を使用します。
 
 ### 2. 翻訳の3ステップ
 1. **MODを選択**:
