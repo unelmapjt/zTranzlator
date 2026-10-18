@@ -9,6 +9,20 @@ Skyrim の傑作翻訳ツール「xTranslator」に着想を得た、**Project Z
 
 ---
 
+> ### 📥 ダウンロード案内（どれを使えばいい？）
+>
+> | 用途・対象 | おすすめのダウンロード先 | 必要な準備 |
+> | :--- | :--- | :--- |
+> | **🎮 すぐに使いたい方（一般・推奨）** | 👉 **[【最新版 スタンドアロンEXE (ZIP)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** をダウンロード | **なし**（Python不要・解凍して即起動） |
+> | **🕹️ Steamで一元管理したい方** | 👉 **[【Steam ワークショップ】](https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049)** でサブスクライブ | **なし**（`run_zTranzlator.cmd` を押すだけ） |
+> | **💻 開発者・コードを見たい方** | 画面上部の緑色［**Code**］ボタンから `git clone` または `Download ZIP` | Python 3.10+ が必要 |
+>
+> ⚠️ **【重要】緑色の［Code ⬇️］ボタンからダウンロードされる方へ**:  
+> 画面上部の緑色［Code］ボタン ➡「Download ZIP」でダウンロードされるファイルは **「開発用の生ソースコード」** です（中に `zTranzlator.exe` は入っていません）。  
+> 面倒な環境設定なしですぐにアプリとして使いたい方は、必ず上記の **[【最新版 スタンドアロンEXE (Releases)】](https://github.com/unelmapjt/zTranzlator/releases/latest)** から ZIP をダウンロードしてください。
+
+---
+
 ## ☕ 制作の想い / はじめに
 Project Zomboid が発売されてからずいぶん経ちますが、今でもたくさんのプレイヤーや配信者・コミュニティに愛され続けています。  
 MOD文化も非常に活発に動いていますが、一方で「言語の壁」は依然として大きく、素晴らしいMODに出会っても導入を躊躇してしまう壁になっていると感じていました。  
@@ -84,13 +98,15 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
      `Steam\steamapps\workshop\content\108600\3820166049\Contents\mods\zTranzlator\`
   3. 初回起動時に必要な準備が自動で行われ、そのままアプリが立ち上がります（2回目以降は即時起動）。
 
-- **【パッケージ2】GitHub Standalone ZIP版（単体ポータブルで使いたい方向け）**
-  1. [GitHub Releases](https://github.com/unelmapjt/zTranzlator/releases/latest) から `zTranzlator_v1.0.0_win64.zip` をダウンロードして展開します。
-  2. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します。
+- **【パッケージ2】GitHub Standalone EXE版（単体ポータブルで使いたい方向け・推奨）**
+  1. 画面右側の［**Releases**］または [最新リリース (Releases/latest)](https://github.com/unelmapjt/zTranzlator/releases/latest) を開きます。
+  2. Assets 一覧から **`zTranzlator_v1.0.0_win64.zip`** をダウンロードして展開します。
+  3. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します（Python不要）。
 
-- **【パッケージ3】ソースコード版（開発者・Python環境向け）**
-  1. 本リポジトリを `git clone` します。
-  2. フォルダ内の **`run_zTranzlator.cmd`** をダブルクリックすると、Python環境と依存ライブラリが自動チェックされて起動します。
+- **【パッケージ3】ソースコード版（開発者・コードの改変・Python環境向け）**
+  1. 画面上部の緑色［**Code**］ボタンから `Download ZIP` を選択するか、`git clone` します。
+  2. フォルダ内の **`run_zTranzlator.cmd`** をダブルクリックするか、ターミナルで `python app_gui.py` を実行します（Python 3.10+ が必要）。
+  3. 初回起動時に必要な Python ライブラリ（CustomTkinter, Pillow 等）が自動インストールされます。
 
 > 💡 **配布用EXEの自作**: 自分でスタンドアロンEXEを再ビルドしたい場合は、`build_exe.cmd` を実行してください。
 
