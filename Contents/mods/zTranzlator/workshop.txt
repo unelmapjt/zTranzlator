@@ -45,7 +45,8 @@ description=まだアルファ版のため至らない点もあるかと思い�
 description=
 description=Author: Uni-SJ
 description=Workshop Profile: https://steamcommunity.com/profiles/76561198062851438/myworkshopfiles?appid=108600
-description=GitHub (Source Code / Standalone Package): https://github.com/unelmapjt/zTranzlator
+description=Standalone Download (Direct ZIP): https://github.com/unelmapjt/zTranzlator/releases/latest
+description=GitHub (Source Code): https://github.com/unelmapjt/zTranzlator
 description=[i]背後に気をつけて。幸運を祈る。[/i]
 description=-----------------------------------------------------------
 description=[h2][English Description][/h2]
@@ -85,8 +86,9 @@ description=When sharing your translated patch on the Workshop, please credit th
 description=A ready-to-use description template (WORKSHOP_DESCRIPTION.txt) is automatically created in your patch folder!
 description=
 description=Author: Uni-SJ
-description=Workshop: https://steamcommunity.com/profiles/76561198062851438/myworkshopfiles?appid=108600
-description=GitHub (Source Code / Standalone Package): https://github.com/unelmapjt/zTranzlator
+description=Workshop Profile: https://steamcommunity.com/profiles/76561198062851438/myworkshopfiles?appid=108600
+description=Standalone Download (Direct ZIP): https://github.com/unelmapjt/zTranzlator/releases/latest
+description=GitHub (Source Code): https://github.com/unelmapjt/zTranzlator
 description=[i]Watch your back. Good luck.[/i]
 tags=Build 42;Framework;Interface
 visibility=private
