@@ -1,7 +1,8 @@
 ============================================================
-zTranzlator - Project Zomboid Build 42 Translation Suite
+zTranzlator (v1.1.0) - Project Zomboid Build 42 Translation Suite
 Author: Uni-SJ
 Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049
+GitHub: https://github.com/unelmapjt/zTranzlator
 ============================================================
 
 【このパッケージについて】
@@ -16,6 +17,11 @@ Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3820166049
 2. 画面の指示に従って翻訳したいMODを選択し、
    「一括AI翻訳を実行」->「ローカルMOD適用」をクリックするだけで、
    完全非破壊の日本語化パッチMODが自動生成されます。
+
+【PZ本体・MODが未検出と表示される場合 (v1.1.0新機能)】
+・別ドライブや別SSDにSteamをインストールしている場合も全自動で検出されますが、
+  万が一画面上部に「● PZ: 未検出」と表示された場合は、そこをクリックして
+  Project Zomboid 本体のフォルダを選択してください（設定は自動保存されます）。
 
 【動作環境】
 ・OS: Windows 10 / 11 (64-bit)
@@ -32,6 +38,11 @@ How to Launch:
 
 2. Select your target mod in the suite, run AI translation,
    and apply the generated standalone patch mod to your local game.
+
+If "PZ: Not Found" Appears:
+- The suite automatically scans all drives and Steam libraries. If your install
+  path is not detected, simply click "PZ: Not Found (Click to set)" on the top
+  header to select your Project Zomboid directory. It will be permanently saved.
 
 Requirements:
 - Windows 10 / 11 (64-bit)
