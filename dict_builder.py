@@ -6,9 +6,215 @@ Project Zomboid Build 42 の公式英語(EN)と日本語(JP)を突合し、
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from collections import defaultdict
+
+if sys.platform == "win32":
+    try:
+        import winreg
+    except ImportError:
+        winreg = None
+else:
+    winreg = None
+
+
+def is_valid_pz_dir(path) -> bool:
+    """有効なProject Zomboid本体ディレクトリかどうかを判定"""
+    if not path:
+        return False
+    p = Path(path)
+    if not p.is_dir():
+        return False
+    # 実行ファイルまたは media/lua が存在するか
+    has_exe = (p / "ProjectZomboid64.exe").is_file() or (p / "projectzomboid.exe").is_file() or (p / "ProjectZomboid32.exe").is_file()
+    has_media = (p / "media" / "lua").is_dir()
+    return has_exe or has_media
+
+
+def is_valid_workshop_dir(path) -> bool:
+    """有効なSteam Workshop (108600) ディレクトリかどうかを判定"""
+    if not path:
+        return False
+    p = Path(path)
+    return p.is_dir()
+
+
+def get_all_steam_libraries() -> list:
+    """
+    Windowsレジストリ、Steam本体設定、libraryfolders.vdf、全ドライブ探索から
+    PC上に存在するすべてのSteamライブラリフォルダを収集して返す
+    """
+    libraries = []
+    seen = set()
+
+    def add_lib(p: Path):
+        try:
+            if p and p.is_dir():
+                resolved = p.resolve()
+                if resolved not in seen:
+                    seen.add(resolved)
+                    libraries.append(resolved)
+        except Exception:
+            pass
+
+    # 1. Windows レジストリから PZ のインストール先を取得
+    if winreg:
+        reg_keys = [
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+            (winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+        ]
+        for root_key, sub_key in reg_keys:
+            try:
+                with winreg.OpenKey(root_key, sub_key) as k:
+                    val, _ = winreg.QueryValueEx(k, "InstallLocation")
+                    if val:
+                        pz_path = Path(val)
+                        if pz_path.is_dir():
+                            lib_root = pz_path.parent.parent.parent
+                            add_lib(lib_root)
+            except Exception:
+                pass
+
+    # 2. Windows レジストリから Steam 本体のインストールパスを取得
+    steam_roots = []
+    if winreg:
+        steam_reg_keys = [
+            (winreg.HKEY_CURRENT_USER, r"Software\Valve\Steam", "SteamPath"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Valve\Steam", "InstallPath"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath"),
+        ]
+        for root_key, sub_key, val_name in steam_reg_keys:
+            try:
+                with winreg.OpenKey(root_key, sub_key) as k:
+                    val, _ = winreg.QueryValueEx(k, val_name)
+                    if val and Path(val).is_dir():
+                        steam_roots.append(Path(val))
+            except Exception:
+                pass
+
+    for s_root in steam_roots:
+        add_lib(s_root)
+        # libraryfolders.vdf をパースして全外部Steamライブラリを取得
+        vdf_path = s_root / "steamapps" / "libraryfolders.vdf"
+        if vdf_path.is_file():
+            try:
+                content = vdf_path.read_text(encoding="utf-8", errors="ignore")
+                for match in re.findall(r'"path"\s+"([^"]+)"', content):
+                    clean_path = match.replace(r"\\", "\\")
+                    add_lib(Path(clean_path))
+            except Exception:
+                pass
+
+    # 3. 利用可能なすべてのドライブレターを探索
+    drive_letters = []
+    if sys.platform == "win32":
+        import string
+        for letter in string.ascii_uppercase:
+            drive = Path(f"{letter}:\\")
+            if drive.exists():
+                drive_letters.append(drive)
+    else:
+        drive_letters = [Path("/")]
+
+    for drive in drive_letters:
+        candidates = [
+            drive / "SteamLibrary",
+            drive / "Steam",
+            drive / "Program Files (x86)" / "Steam",
+            drive / "Program Files" / "Steam",
+            drive / "Games" / "SteamLibrary",
+            drive / "Games" / "Steam",
+        ]
+        for c in candidates:
+            add_lib(c)
+
+    return libraries
+
+
+def find_pz_directory(custom_path=None) -> Path:
+    """Project Zomboidのインストール先を特定する (手動パス最優先 ➡ レジストリ ➡ 全Steamライブラリ ➡ 全ドライブ走査)"""
+    # 1. ユーザー手動指定パス
+    if custom_path:
+        p = Path(custom_path)
+        if is_valid_pz_dir(p):
+            return p
+
+    # 2. Windows レジストリから直接取得
+    if winreg:
+        reg_keys = [
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+            (winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 108600"),
+        ]
+        for root_key, sub_key in reg_keys:
+            try:
+                with winreg.OpenKey(root_key, sub_key) as k:
+                    val, _ = winreg.QueryValueEx(k, "InstallLocation")
+                    if val and is_valid_pz_dir(val):
+                        return Path(val)
+            except Exception:
+                pass
+
+    # 3. 検出された全Steamライブラリから探す
+    libraries = get_all_steam_libraries()
+    for lib in libraries:
+        candidate = lib / "steamapps" / "common" / "ProjectZomboid"
+        if is_valid_pz_dir(candidate):
+            return candidate
+
+    # 4. 全ドライブの直下やGamesフォルダから探す (GOG版・スタンドアロン等)
+    if sys.platform == "win32":
+        import string
+        for letter in string.ascii_uppercase:
+            drive = Path(f"{letter}:\\")
+            if not drive.exists():
+                continue
+            extras = [
+                drive / "Games" / "Project Zomboid",
+                drive / "Games" / "ProjectZomboid",
+                drive / "GOG Games" / "Project Zomboid",
+                drive / "ProjectZomboid",
+            ]
+            for ext in extras:
+                if is_valid_pz_dir(ext):
+                    return ext
+
+    return None
+
+
+def find_workshop_directory(pz_dir=None, custom_path=None) -> Path:
+    """Steam Workshop (108600) ディレクトリを特定する"""
+    # 1. ユーザー手動指定パス
+    if custom_path:
+        p = Path(custom_path)
+        if is_valid_workshop_dir(p):
+            return p
+
+    # 2. PZ本体ディレクトリの親から推測
+    if pz_dir:
+        try:
+            ws = pz_dir.parent.parent / "workshop" / "content" / "108600"
+            if ws.is_dir():
+                return ws
+        except Exception:
+            pass
+
+    # 3. 全Steamライブラリから探す
+    libraries = get_all_steam_libraries()
+    for lib in libraries:
+        ws = lib / "steamapps" / "workshop" / "content" / "108600"
+        if ws.is_dir():
+            return ws
+
+    # 4. デフォルトフォールバック
+    default_c = Path(r"C:\Program Files (x86)\Steam\steamapps\workshop\content\108600")
+    if default_c.is_dir():
+        return default_c
+
+    return None
 
 
 DEFAULT_PZ_PATHS = [
@@ -17,14 +223,6 @@ DEFAULT_PZ_PATHS = [
     Path(r"D:\SteamLibrary\steamapps\common\ProjectZomboid"),
     Path(r"E:\SteamLibrary\steamapps\common\ProjectZomboid"),
 ]
-
-
-def find_pz_directory() -> Path:
-    """Project Zomboidのインストール先を特定する"""
-    for p in DEFAULT_PZ_PATHS:
-        if (p / "media" / "lua" / "shared" / "Translate").is_dir():
-            return p
-    return None
 
 
 def clean_text(text: str) -> str:

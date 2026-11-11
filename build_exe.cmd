@@ -36,12 +36,12 @@ copy /y "MANUAL.html" "dist\zTranzlator\" >nul
 copy /y "README.md" "dist\zTranzlator\" >nul
 
 echo [4/4] 配信用 ZIP アーカイブを作成中...
-powershell -NoProfile -Command "Compress-Archive -Path 'dist\zTranzlator' -DestinationPath 'dist\zTranzlator_v1.0.0_win64.zip' -Force"
+powershell -NoProfile -Command "Compress-Archive -Path 'dist\zTranzlator' -DestinationPath 'dist\zTranzlator_v1.1.0_win64.zip' -Force"
 
 echo.
 echo ============================================================
 echo   ビルド ＆ ZIP パッケージ作成が完了しました！
 echo   EXE: dist\zTranzlator\zTranzlator.exe
-echo   ZIP: dist\zTranzlator_v1.0.0_win64.zip
+echo   ZIP: dist\zTranzlator_v1.1.0_win64.zip
 echo ============================================================
 pause

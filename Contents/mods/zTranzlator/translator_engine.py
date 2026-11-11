@@ -89,6 +89,8 @@ DEFAULT_CONFIG = {
     "openai_base_url": "https://api.openai.com/v1",
     "openai_api_key": "",
     "openai_model": "gpt-4o-mini",
+    "pz_path": "",
+    "workshop_path": "",
 }
 
 

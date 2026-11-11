@@ -28,11 +28,11 @@ SUPPORTED_TARGET_LANGUAGES = {
 
 STRINGS = {
     "app_title": {
-        "ja": "zTranzlator — Project Zomboid Build 42 総合翻訳スイート",
-        "en": "zTranzlator — Project Zomboid Build 42 Translation Suite",
-        "ko": "zTranzlator — Project Zomboid Build 42 종합 번역 도구",
-        "zh-CN": "zTranzlator — 僵尸毁灭工程 Build 42 综合翻译套件",
-        "es": "zTranzlator — Suite de Traducción para Project Zomboid Build 42",
+        "ja": "zTranzlator v1.1.0 — Project Zomboid Build 42 総合翻訳スイート",
+        "en": "zTranzlator v1.1.0 — Project Zomboid Build 42 Translation Suite",
+        "ko": "zTranzlator v1.1.0 — Project Zomboid Build 42 종합 번역 도구",
+        "zh-CN": "zTranzlator v1.1.0 — 僵尸毁灭工程 Build 42 综合翻译套件",
+        "es": "zTranzlator v1.1.0 — Suite de Traducción para Project Zomboid Build 42",
     },
     "btn_settings": {
         "ja": "⚙ 翻訳設定",
@@ -425,6 +425,69 @@ STRINGS = {
         "ko": "⚖ 면책 조항",
         "zh-CN": "⚖ 免责声明",
         "es": "⚖ Aviso legal",
+    },
+    "sec_path_settings": {
+        "ja": "ゲーム・MODパス設定 (PZ本体 / Workshop)",
+        "en": "Path Settings (PZ Install / Workshop)",
+        "ko": "경로 설정 (PZ 본체 / 창작마당)",
+        "zh-CN": "路径设置 (游戏本体 / 创意工坊)",
+        "es": "Configuración de Rutas (PZ / Workshop)",
+    },
+    "lbl_pz_path": {
+        "ja": "Project Zomboid 本体:",
+        "en": "Project Zomboid Install:",
+        "ko": "Project Zomboid 본체:",
+        "zh-CN": "Project Zomboid 游戏本体:",
+        "es": "Instalación de Project Zomboid:",
+    },
+    "lbl_ws_path": {
+        "ja": "Steam Workshop (108600):",
+        "en": "Steam Workshop (108600):",
+        "ko": "Steam 창작마당 (108600):",
+        "zh-CN": "Steam 创意工坊 (108600):",
+        "es": "Steam Workshop (108600):",
+    },
+    "btn_browse": {
+        "ja": "📁 参照",
+        "en": "📁 Browse",
+        "ko": "📁 찾아보기",
+        "zh-CN": "📁 浏览",
+        "es": "📁 Examinar",
+    },
+    "btn_auto_detect": {
+        "ja": "🔄 自動検出",
+        "en": "🔄 Auto-Detect",
+        "ko": "🔄 자동 감지",
+        "zh-CN": "🔄 自动检测",
+        "es": "🔄 Autodetectar",
+    },
+    "pz_not_detected_click": {
+        "ja": "PZ: 未検出 (クリックして指定)",
+        "en": "PZ: Not Found (Click to set)",
+        "ko": "PZ: 미감지 (클릭하여 설정)",
+        "zh-CN": "PZ: 未检测到 (点击设置)",
+        "es": "PZ: No detectado (Clic para configurar)",
+    },
+    "msg_pz_selected": {
+        "ja": "PZ本体フォルダを設定しました:\n{path}",
+        "en": "Project Zomboid directory set to:\n{path}",
+        "ko": "PZ 본체 폴더가 설정되었습니다:\n{path}",
+        "zh-CN": "已设置游戏本体目录:\n{path}",
+        "es": "Carpeta de Project Zomboid configurada:\n{path}",
+    },
+    "msg_pz_invalid": {
+        "ja": "選択されたフォルダに Project Zomboid のファイル (ProjectZomboid64.exe または media フォルダ) が見つかりませんでした。",
+        "en": "Project Zomboid files (ProjectZomboid64.exe or media folder) were not found in the selected folder.",
+        "ko": "선택한 폴더에서 Project Zomboid 파일(ProjectZomboid64.exe 또는 media 폴더)을 찾을 수 없습니다.",
+        "zh-CN": "在所选目录中未找到 Project Zomboid 相关文件。",
+        "es": "No se encontraron archivos de Project Zomboid en la carpeta seleccionada.",
+    },
+    "msg_ws_selected": {
+        "ja": "Steam Workshop フォルダを設定しました:\n{path}",
+        "en": "Steam Workshop directory set to:\n{path}",
+        "ko": "Steam 창작마당 폴더가 설정되었습니다:\n{path}",
+        "zh-CN": "已设置 Steam 创意工坊目录:\n{path}",
+        "es": "Carpeta de Steam Workshop configurada:\n{path}",
     },
 }
 

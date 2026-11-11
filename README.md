@@ -91,6 +91,9 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
    - **クラウドAI API**: Google Gemini（無料枠あり）や OpenAI 互換（Groq の超高速LPU、DeepSeek、OpenAI、OpenRouter）に対応。
 9. **ゲーム内リアルタイム切り替え（ModOptions連動）**
    - ゲーム内の「Mod設定 (Mod Options)」から、ゲームを再起動することなくいつでも即座に日本語と英語を切り替え可能。
+10. **全ドライブ・別ディスク対応 ＆ 手動パス指定機能 (v1.1.0新機能)**
+   - WindowsレジストリやSteam設定ファイル（`libraryfolders.vdf`）、全論理ドライブ（C〜Z）を全自動走査。Dドライブや外付けSSD等にSteamを配置していてもPZ本体やWorkshop MODを一発自動検出。
+   - ヘッダーの「PZ: 未検出」や設定画面からフォルダを［参照...］で手動選択して即時保存可能。どんな特殊なドライブ構成でも確実に動作します。
 
 ---
 
@@ -102,7 +105,7 @@ MOD文化も非常に活発に動いていますが、一方で「言語の壁�
 
 - **【方法1】スタンドアロンEXE版（一番手軽・おすすめ！）**
   1. 画面右側の［**Releases**］または [最新リリース (Releases/latest)](https://github.com/unelmapjt/zTranzlator/releases/latest) を開きます。
-  2. Assets 一覧から **`zTranzlator_v1.0.0_win64.zip`** をダウンロードして展開します。
+  2. Assets 一覧から **`zTranzlator_v1.1.0_win64.zip`** をダウンロードして展開します。
   3. フォルダ内の **`zTranzlator.exe`** をダブルクリックするだけで、0秒で即起動します（Python不要・完全ポータブル）。
 
 - **【方法2】Steam ワークショップ版（Steamで一元管理したい方向け）**

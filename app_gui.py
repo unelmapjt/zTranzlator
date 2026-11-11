@@ -24,7 +24,10 @@ from typing import Dict, List, Optional
 import customtkinter as ctk
 
 # 自作モジュール
-from dict_builder import find_pz_directory, build_master_dictionary
+from dict_builder import (
+    find_pz_directory, find_workshop_directory,
+    is_valid_pz_dir, is_valid_workshop_dir, build_master_dictionary
+)
 from mod_scanner import scan_mod, load_vanilla_dict
 from translator_engine import (
     run_translation_pipeline, OllamaClient, GeminiClient, ConfigManager,
@@ -33,6 +36,7 @@ from translator_engine import (
 from mod_generator import generate_patch_mod
 from i18n import t, set_ui_language, get_ui_language, SUPPORTED_UI_LANGUAGES, SUPPORTED_TARGET_LANGUAGES
 
+APP_VERSION = "v1.1.0"
 
 # フォント設定 (メイリオ / Meiryo UI で統一)
 FONT_FAMILY = "Meiryo UI"
@@ -55,27 +59,11 @@ ctk.set_default_color_theme("blue")
 
 def find_default_workshop_path() -> Path:
     """Steam Workshop (108600) フォルダを全ドライブ・ライブラリから自動検出"""
-    candidates = [
-        Path(r"C:\Program Files (x86)\Steam\steamapps\workshop\content\108600"),
-        Path(r"C:\Program Files\Steam\steamapps\workshop\content\108600"),
-        Path(r"D:\SteamLibrary\steamapps\workshop\content\108600"),
-        Path(r"E:\SteamLibrary\steamapps\workshop\content\108600"),
-        Path(r"F:\SteamLibrary\steamapps\workshop\content\108600"),
-    ]
-    pz = find_pz_directory()
-    if pz:
-        try:
-            ws = pz.parent.parent / "workshop" / "content" / "108600"
-            if ws.is_dir() and ws not in candidates:
-                candidates.insert(0, ws)
-        except Exception:
-            pass
-
-    for p in candidates:
-        if p.is_dir():
-            return p
-    return candidates[0]
-
+    ws = find_workshop_directory(find_pz_directory())
+    if ws:
+        return ws
+    fallback = Path(r"C:\Program Files (x86)\Steam\steamapps\workshop\content\108600")
+    return fallback
 
 DEFAULT_WORKSHOP_PATH = find_default_workshop_path()
 DEFAULT_USER_MODS_PATH = Path.home() / "Zomboid" / "mods"
@@ -193,12 +181,13 @@ class ModernEditDialog(ctk.CTkToplevel):
 
 
 class ModernSettingsDialog(ctk.CTkToplevel):
-    """翻訳エンジン設定モーダル (Ollamaリンク/モデル一覧/直接DL ＆ Gemini / OpenAI互換API設定)"""
+    """翻訳設定モーダル (言語 / PZ・Workshopパス / 翻訳エンジン設定)"""
     def __init__(self, parent):
         super().__init__(parent)
-        self.title("⚙️ 翻訳エンジン設定")
-        self.geometry("740x740")
-        self.resizable(False, False)
+        self.title("⚙️ " + t("btn_settings"))
+        self.geometry("780x780")
+        self.minsize(720, 600)
+        self.resizable(True, True)
         self.transient(parent)
         self.grab_set()
 
@@ -211,8 +200,32 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         self.engine_var = tk.StringVar(value=self.config.get("engine_type", "smart_dict"))
         self.api_provider_var = tk.StringVar(value=self.config.get("api_provider", "gemini"))
 
-        main_box = ctk.CTkFrame(self, fg_color="transparent")
-        main_box.pack(fill="both", expand=True, padx=24, pady=16)
+        # 下部固定アクションバー
+        action_bar = ctk.CTkFrame(self, fg_color="#14171f", height=50)
+        action_bar.pack(fill="x", side="bottom", padx=24, pady=12)
+
+        disclaimer_btn = ctk.CTkButton(
+            action_bar, text=t("btn_disclaimer"), width=110, height=36, font=FONT_NORMAL,
+            fg_color="#1e293b", hover_color="#334155", corner_radius=8,
+            command=lambda: DisclaimerDialog(self.parent, is_first_launch=False)
+        )
+        disclaimer_btn.pack(side="left")
+
+        save_btn = ctk.CTkButton(
+            action_bar, text="設定を保存", width=120, height=36, font=FONT_BUTTON,
+            fg_color="#10b981", hover_color="#059669", corner_radius=8, command=self.on_save
+        )
+        save_btn.pack(side="right", padx=(8, 0))
+
+        cancel_btn = ctk.CTkButton(
+            action_bar, text="キャンセル", width=90, height=36, font=FONT_NORMAL,
+            fg_color="#334155", hover_color="#475569", corner_radius=8, command=self.destroy
+        )
+        cancel_btn.pack(side="right")
+
+        # スクロール可能メインコンテンツ
+        main_box = ctk.CTkScrollableFrame(self, fg_color="transparent")
+        main_box.pack(fill="both", expand=True, padx=20, pady=(16, 0))
 
         # --- 言語設定カード (UI言語 & 翻訳先言語) ---
         lang_card = ctk.CTkFrame(main_box, fg_color="#181c26", corner_radius=10, border_width=1, border_color="#2b3242")
@@ -257,6 +270,70 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         self.target_lang_menu.pack(anchor="w")
 
         ctk.CTkLabel(lang_card, text=t("note_target_lang"), font=FONT_SMALL, text_color="#64748b").pack(anchor="w", padx=12, pady=(4, 2))
+
+        # --- ディレクトリ設定カード (PZ本体 & Workshop) ---
+        dir_card = ctk.CTkFrame(main_box, fg_color="#181c26", corner_radius=10, border_width=1, border_color="#2b3242")
+        dir_card.pack(fill="x", pady=(0, 10), ipadx=8, ipady=6)
+
+        ctk.CTkLabel(dir_card, text=f"📁 {t('sec_path_settings')}", font=FONT_TITLE, text_color="#38bdf8").pack(anchor="w", padx=12, pady=(4, 6))
+
+        # 1. PZ本体パス
+        pz_box = ctk.CTkFrame(dir_card, fg_color="transparent")
+        pz_box.pack(fill="x", padx=12, pady=2)
+        ctk.CTkLabel(pz_box, text=t("lbl_pz_path"), font=FONT_SMALL, text_color="#cbd5e1").pack(anchor="w", pady=(0, 2))
+
+        pz_input_row = ctk.CTkFrame(pz_box, fg_color="transparent")
+        pz_input_row.pack(fill="x")
+        self.pz_path_entry = ctk.CTkEntry(
+            pz_input_row, height=28, font=FONT_SMALL,
+            fg_color="#181c26", border_color="#334155", corner_radius=6
+        )
+        current_pz = self.config.get("pz_path", "")
+        if not current_pz and getattr(self.parent, "pz_dir", None):
+            current_pz = str(self.parent.pz_dir)
+        self.pz_path_entry.insert(0, current_pz)
+        self.pz_path_entry.pack(side="left", fill="x", expand=True, padx=(0, 6))
+
+        ctk.CTkButton(
+            pz_input_row, text=t("btn_browse"), width=75, height=28, font=FONT_SMALL,
+            fg_color="#334155", hover_color="#475569", corner_radius=6,
+            command=self.on_browse_pz
+        ).pack(side="left", padx=(0, 4))
+
+        ctk.CTkButton(
+            pz_input_row, text=t("btn_auto_detect"), width=95, height=28, font=FONT_SMALL,
+            fg_color="#1e293b", hover_color="#334155", corner_radius=6,
+            command=self.on_autodetect_pz
+        ).pack(side="left")
+
+        # 2. Steam Workshopパス
+        ws_box = ctk.CTkFrame(dir_card, fg_color="transparent")
+        ws_box.pack(fill="x", padx=12, pady=(6, 4))
+        ctk.CTkLabel(ws_box, text=t("lbl_ws_path"), font=FONT_SMALL, text_color="#cbd5e1").pack(anchor="w", pady=(0, 2))
+
+        ws_input_row = ctk.CTkFrame(ws_box, fg_color="transparent")
+        ws_input_row.pack(fill="x")
+        self.ws_path_entry = ctk.CTkEntry(
+            ws_input_row, height=28, font=FONT_SMALL,
+            fg_color="#181c26", border_color="#334155", corner_radius=6
+        )
+        current_ws = self.config.get("workshop_path", "")
+        if not current_ws and getattr(self.parent, "workshop_dir", None):
+            current_ws = str(self.parent.workshop_dir)
+        self.ws_path_entry.insert(0, current_ws)
+        self.ws_path_entry.pack(side="left", fill="x", expand=True, padx=(0, 6))
+
+        ctk.CTkButton(
+            ws_input_row, text=t("btn_browse"), width=75, height=28, font=FONT_SMALL,
+            fg_color="#334155", hover_color="#475569", corner_radius=6,
+            command=self.on_browse_ws
+        ).pack(side="left", padx=(0, 4))
+
+        ctk.CTkButton(
+            ws_input_row, text=t("btn_auto_detect"), width=95, height=28, font=FONT_SMALL,
+            fg_color="#1e293b", hover_color="#334155", corner_radius=6,
+            command=self.on_autodetect_ws
+        ).pack(side="left")
 
         ctk.CTkLabel(main_box, text=t("sec_engine_settings"), font=FONT_TITLE, text_color="#f8fafc").pack(anchor="w", pady=(6, 8))
 
@@ -484,29 +561,6 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         # Ollamaモデルの初期ロード（未起動なら自動起動）
         self.refresh_ollama_models(auto_start=True)
 
-        # --- 下部アクションバー ---
-        action_bar = ctk.CTkFrame(main_box, fg_color="transparent")
-        action_bar.pack(fill="x", side="bottom", pady=(12, 0))
-
-        disclaimer_btn = ctk.CTkButton(
-            action_bar, text=t("btn_disclaimer"), width=110, height=36, font=FONT_NORMAL,
-            fg_color="#1e293b", hover_color="#334155", corner_radius=8,
-            command=lambda: DisclaimerDialog(self.parent, is_first_launch=False)
-        )
-        disclaimer_btn.pack(side="left")
-
-        save_btn = ctk.CTkButton(
-            action_bar, text="設定を保存", width=120, height=36, font=FONT_BUTTON,
-            fg_color="#10b981", hover_color="#059669", corner_radius=8, command=self.on_save
-        )
-        save_btn.pack(side="right", padx=(8, 0))
-
-        cancel_btn = ctk.CTkButton(
-            action_bar, text="キャンセル", width=90, height=36, font=FONT_NORMAL,
-            fg_color="#334155", hover_color="#475569", corner_radius=8, command=self.destroy
-        )
-        cancel_btn.pack(side="right")
-
     def refresh_ollama_models(self, auto_start: bool = True, select_model: Optional[str] = None):
         """Ollamaの起動確認・自動起動およびインストール済みモデル一覧の同期"""
         self.ollama_status_lbl.configure(text="🔄 接続確認・モデル情報取得中...", text_color="#38bdf8")
@@ -649,6 +703,52 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         else:
             messagebox.showerror("エラー", "API接続に失敗しました。Base URL、APIキー、モデル名をご確認ください。")
 
+    def on_browse_pz(self):
+        cur = self.pz_path_entry.get().strip() or r"C:\Program Files (x86)\Steam\steamapps\common"
+        p = filedialog.askdirectory(title="Project Zomboid 本体フォルダを選択", initialdir=cur)
+        if p:
+            if is_valid_pz_dir(p):
+                self.pz_path_entry.delete(0, "end")
+                self.pz_path_entry.insert(0, p)
+                ws = find_workshop_directory(pz_dir=Path(p))
+                if ws and (not self.ws_path_entry.get().strip() or not Path(self.ws_path_entry.get().strip()).is_dir()):
+                    self.ws_path_entry.delete(0, "end")
+                    self.ws_path_entry.insert(0, str(ws))
+            else:
+                messagebox.showwarning("警告", t("msg_pz_invalid"))
+
+    def on_autodetect_pz(self):
+        detected = find_pz_directory()
+        if detected:
+            self.pz_path_entry.delete(0, "end")
+            self.pz_path_entry.insert(0, str(detected))
+            # Workshopも連動更新
+            ws = find_workshop_directory(pz_dir=detected)
+            if ws and (not self.ws_path_entry.get().strip() or not Path(self.ws_path_entry.get().strip()).is_dir()):
+                self.ws_path_entry.delete(0, "end")
+                self.ws_path_entry.insert(0, str(ws))
+            messagebox.showinfo("検出成功", f"Project Zomboid を自動検出しました:\n{detected}")
+        else:
+            messagebox.showerror("未検出", "Project Zomboid を自動検出できませんでした。手動で［参照］から選択してください。")
+
+    def on_browse_ws(self):
+        cur = self.ws_path_entry.get().strip()
+        p = filedialog.askdirectory(title="Steam Workshop (108600) フォルダを選択", initialdir=cur)
+        if p:
+            self.ws_path_entry.delete(0, "end")
+            self.ws_path_entry.insert(0, p)
+
+    def on_autodetect_ws(self):
+        pz_p = self.pz_path_entry.get().strip()
+        pz_dir = Path(pz_p) if pz_p and Path(pz_p).is_dir() else None
+        detected = find_workshop_directory(pz_dir=pz_dir)
+        if detected:
+            self.ws_path_entry.delete(0, "end")
+            self.ws_path_entry.insert(0, str(detected))
+            messagebox.showinfo("検出成功", f"Steam Workshop フォルダを検出しました:\n{detected}")
+        else:
+            messagebox.showerror("未検出", "Workshopフォルダを自動検出できませんでした。手動で［参照］から選択してください。")
+
     def on_window_close(self):
         """ウィンドウ右上の×ボタンで閉じられた場合も、現在の変更内容を保存して反映"""
         self.on_save(silent=True)
@@ -670,7 +770,11 @@ class ModernSettingsDialog(ctk.CTkToplevel):
         old_target = getattr(self.parent, "target_lang", "JP")
         self.config["target_language"] = target_code
 
-        # 3. エンジン設定
+        # 3. ディレクトリ設定
+        self.config["pz_path"] = self.pz_path_entry.get().strip()
+        self.config["workshop_path"] = self.ws_path_entry.get().strip()
+
+        # 4. エンジン設定
         self.config["engine_type"] = self.engine_var.get()
         sel = self.model_dropdown.get()
         clean_model = sel.split(" (")[0].strip() if " (" in sel else sel.strip()
@@ -957,8 +1061,10 @@ class ModernZTranzlatorApp(ctk.CTk):
         self.configure(fg_color="#0f1115")
 
         self.base_dir = Path(__file__).parent
-        self.pz_dir = find_pz_directory()
-        self.workshop_dir = DEFAULT_WORKSHOP_PATH
+        custom_pz = self.config.get("pz_path")
+        custom_ws = self.config.get("workshop_path")
+        self.pz_dir = find_pz_directory(custom_pz)
+        self.workshop_dir = find_workshop_directory(self.pz_dir, custom_ws) or DEFAULT_WORKSHOP_PATH
         self.user_mods_dir = DEFAULT_USER_MODS_PATH
 
         self.vanilla_dict = {}
@@ -1142,7 +1248,7 @@ class ModernZTranzlatorApp(ctk.CTk):
         logo_lbl = ctk.CTkLabel(brand_frame, text="zTranzlator", font=FONT_LOGO, text_color="#f8fafc")
         logo_lbl.pack(side="left")
         badge_lbl = ctk.CTkLabel(
-            brand_frame, text="B42 READY", font=FONT_BADGE,
+            brand_frame, text=f"{APP_VERSION} (B42)", font=FONT_BADGE,
             text_color="#38bdf8", fg_color="#0369a1", corner_radius=6, padx=6, pady=2
         )
         badge_lbl.pack(side="left", padx=8)
@@ -1151,10 +1257,14 @@ class ModernZTranzlatorApp(ctk.CTk):
         status_frame = ctk.CTkFrame(header, fg_color="transparent")
         status_frame.pack(side="left", padx=16)
 
-        pz_status_text = f"PZ: {self.pz_dir.name}" if self.pz_dir else "PZ: 未検出"
-        pz_color = "#10b981" if self.pz_dir else "#f43f5e"
-        ctk.CTkLabel(status_frame, text="●", text_color=pz_color, font=FONT_SMALL).pack(side="left", padx=(0, 4))
-        ctk.CTkLabel(status_frame, text=pz_status_text, font=FONT_NORMAL, text_color="#94a3b8").pack(side="left", padx=(0, 16))
+        # PZステータスボタン (未検出時は赤で警告、検出時は緑。クリックで手動選択ダイアログ)
+        self.pz_status_btn = ctk.CTkButton(
+            status_frame, text="", font=FONT_NORMAL,
+            fg_color="transparent", hover_color="#1e222b",
+            height=26, corner_radius=6, command=self.on_click_pz_status
+        )
+        self.pz_status_btn.pack(side="left", padx=(0, 16))
+        self.update_pz_status_display()
 
         # エンジンステータス表示
         self.engine_dot = ctk.CTkLabel(status_frame, text="●", text_color="#10b981", font=FONT_SMALL)
@@ -1484,17 +1594,60 @@ class ModernZTranzlatorApp(ctk.CTk):
         self.hw_vram_lbl = ctk.CTkLabel(self.hw_monitor_frame, text="⚡ VRAM: --%", font=FONT_STATUS, text_color="#e2e8f0")
         self.hw_vram_lbl.pack(side="left")
 
+    def update_pz_status_display(self):
+        """ヘッダーのPZステータス表示を最新の状態に更新"""
+        if hasattr(self, "pz_status_btn"):
+            if self.pz_dir and is_valid_pz_dir(self.pz_dir):
+                self.pz_status_btn.configure(
+                    text=f"● PZ: {self.pz_dir.name}",
+                    text_color="#10b981"
+                )
+            else:
+                self.pz_status_btn.configure(
+                    text=f"● {t('pz_not_detected_click')}",
+                    text_color="#f43f5e"
+                )
+
+    def on_click_pz_status(self):
+        """ヘッダーのPZステータスボタンをクリックした際、手動でPZ本体フォルダを選択"""
+        initial = str(self.pz_dir) if self.pz_dir else r"C:\Program Files (x86)\Steam\steamapps\common"
+        p = filedialog.askdirectory(title="Project Zomboid 本体フォルダを選択", initialdir=initial)
+        if p:
+            if is_valid_pz_dir(p):
+                self.pz_dir = Path(p)
+                self.config["pz_path"] = str(p)
+                # Workshopも同一ライブラリから推定・更新
+                ws = find_workshop_directory(pz_dir=self.pz_dir, custom_path=self.config.get("workshop_path"))
+                if ws:
+                    self.workshop_dir = ws
+                    self.config["workshop_path"] = str(ws)
+                ConfigManager.save(self.config)
+                self.update_pz_status_display()
+                self.load_dictionary_cache()
+                self.scan_installed_mods()
+                messagebox.showinfo(t("status_ready"), t("msg_pz_selected", path=p))
+            else:
+                messagebox.showwarning("警告", t("msg_pz_invalid"))
+
     def on_settings_updated(self, ui_changed=False, target_changed=False):
         self.config = ConfigManager.load()
         self.ui_lang = self.config.get("ui_language", "ja")
         set_ui_language(self.ui_lang)
         self.target_lang = self.config.get("target_language", "JP")
 
-        if target_changed:
+        # ディレクトリパス再評価
+        custom_pz = self.config.get("pz_path")
+        custom_ws = self.config.get("workshop_path")
+        self.pz_dir = find_pz_directory(custom_pz)
+        self.workshop_dir = find_workshop_directory(self.pz_dir, custom_ws) or DEFAULT_WORKSHOP_PATH
+        self.update_pz_status_display()
+
+        if target_changed or ui_changed:
             self.load_dictionary_cache()
             if self.current_mod:
                 self.on_mod_selected(None)
 
+        self.scan_installed_mods()
         self.update_engine_status()
         self.refresh_ui_text()
 
@@ -1589,10 +1742,10 @@ class ModernZTranzlatorApp(ctk.CTk):
         found_ids = set()
 
         scan_dirs = []
-        if self.workshop_dir.is_dir():
+        if self.workshop_dir and self.workshop_dir.is_dir():
             scan_dirs.extend(list(self.workshop_dir.glob("*/mods/*")))
             scan_dirs.extend(list(self.workshop_dir.glob("*")))
-        if self.user_mods_dir.is_dir():
+        if self.user_mods_dir and self.user_mods_dir.is_dir():
             scan_dirs.extend(list(self.user_mods_dir.glob("*")))
 
         for mod_path in scan_dirs:
@@ -2495,9 +2648,11 @@ class ModernZTranzlatorApp(ctk.CTk):
             messagebox.showwarning("案内", "マニュアルファイル (MANUAL.html) が見つかりません。")
 
     def on_rebuild_dict(self):
-        if not self.pz_dir:
-            messagebox.showerror("エラー", "PZ本体ディレクトリが見つかりません。")
-            return
+        if not self.pz_dir or not is_valid_pz_dir(self.pz_dir):
+            if messagebox.askyesno("案内", "PZ本体ディレクトリが設定されていません。\nフォルダを手動で指定しますか？"):
+                self.on_click_pz_status()
+            if not self.pz_dir or not is_valid_pz_dir(self.pz_dir):
+                return
         self.status_var.set("バニラ公式辞書を再構築中...")
         self.update_idletasks()
         build_master_dictionary(self.pz_dir, self.base_dir)

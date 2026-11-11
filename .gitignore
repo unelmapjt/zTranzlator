@@ -22,6 +22,7 @@ translated_*_dict.json
 Thumbs.db
 Desktop.ini
 .DS_Store
+*~lock~
 
 # IDE / Editor settings
 .vscode/
