@@ -30,6 +30,7 @@ jobs:
           python -m pip install pyinstaller pillow customtkinter darkdetect psutil requests
 
       - name: Build Executable with PyInstaller
+        shell: powershell
         run: |
           python -m PyInstaller --noconfirm --onedir --windowed `
             --name "zTranzlator" `
@@ -64,3 +65,4 @@ jobs:
           prerelease: false
           files: ${{ env.ZIP_PATH }}
           generate_release_notes: true
+

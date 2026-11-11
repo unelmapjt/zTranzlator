@@ -9,7 +9,7 @@ config.json
 # Local caches & outputs
 mod_progress_cache.json
 mod_draft_cache.json
-vanilla_dict*.json
+vanilla_dict_meta.json
 output/
 dist/
 build/
