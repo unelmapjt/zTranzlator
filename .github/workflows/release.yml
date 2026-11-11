@@ -1,0 +1,66 @@
+name: Build and Release Standalone Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller pillow customtkinter darkdetect psutil requests
+
+      - name: Build Executable with PyInstaller
+        run: |
+          python -m PyInstaller --noconfirm --onedir --windowed `
+            --name "zTranzlator" `
+            --add-data "vanilla_dict.json;." `
+            --add-data "vanilla_dict_KO.json;." `
+            --add-data "MANUAL.html;." `
+            --add-data "README.md;." `
+            --add-data "SPECIFICATION.md;." `
+            --add-data "preview.png;." `
+            --add-data "poster.png;." `
+            --collect-all customtkinter `
+            app_gui.py
+
+      - name: Bundle Documentation and Create ZIP
+        shell: powershell
+        run: |
+          Copy-Item "HOW_TO_USE.txt" -Destination "dist\zTranzlator\" -Force
+          Copy-Item "MANUAL.html" -Destination "dist\zTranzlator\" -Force
+          Copy-Item "README.md" -Destination "dist\zTranzlator\" -Force
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.1.0" }
+          $zipName = "zTranzlator_${tag}_win64.zip"
+          Compress-Archive -Path "dist\zTranzlator" -DestinationPath "dist\$zipName" -Force
+          "ZIP_PATH=dist\$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: zTranzlator ${{ env.RELEASE_TAG }} - Multi-Drive Support & Manual Directory Configuration
+          draft: false
+          prerelease: false
+          files: ${{ env.ZIP_PATH }}
+          generate_release_notes: true
